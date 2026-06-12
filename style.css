@@ -312,6 +312,8 @@ button { cursor:pointer; font-family:inherit; }
   background: #1b5e20;
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(46,125,50,.35);
+}
+
 /* Hamburger */
 .hamburger-btn {
   display: none;
