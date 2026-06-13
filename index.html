@@ -13,8 +13,21 @@
 
   <!-- Main Stylesheet -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- GSAP for Splash Screen Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 <body>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- CINEMATIC SPLASH SCREEN                      -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="splashScreen" class="splash-screen">
+    <div class="splash-image-wrapper">
+      <video id="splashVideo" class="splash-scene-image" src="assets/videos/splash.mp4" autoplay muted playsinline></video>
+    </div>
+    <div id="steamContainer" class="steam-container"></div>
+  </div>
 
   <!-- ═══════════════════════════════════════════ -->
   <!-- TOP ULTRA-THIN PREMIUM RUNNING INFO BAR    -->
