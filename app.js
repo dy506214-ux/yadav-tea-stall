@@ -822,3 +822,93 @@ function removeOwnerPhoto() {
   loadOwnerPhoto();
   showToast('🗑️ फोटो हटा दी गई।', 'info');
 }
+
+/* ------------------------------------------- */
+/* CINEMATIC SPLASH SCREEN LOGIC                */
+/* ------------------------------------------- */
+document.addEventListener('DOMContentLoaded', () => {
+  const splashScreen = document.getElementById('splashScreen');
+  if (!splashScreen || typeof gsap === 'undefined') return;
+
+  // Prevent scrolling while splash screen is active
+  document.body.style.overflow = 'hidden';
+
+  const imageWrapper = document.querySelector('.splash-image-wrapper');
+  const sceneImage = document.getElementById('splashSceneImage');
+  const steamContainer = document.getElementById('steamContainer');
+
+  const tl = gsap.timeline();
+
+  // 1. Reveal from top to bottom (simulating the pour)
+  tl.to(imageWrapper, {
+    '--reveal-y': '45%', // Kettle appears
+    duration: 1.5,
+    ease: 'power2.out'
+  }, 0.2);
+
+  tl.to(imageWrapper, {
+    '--reveal-y': '100%', // Tea stream and glass appear
+    duration: 1.5,
+    ease: 'power1.inOut',
+    onStart: () => {
+      // Start steam halfway through the pour
+      setTimeout(startSteamEffect, 800);
+    }
+  }, 1.7);
+
+  // 2. Slow cinematic zoom-in
+  gsap.to(sceneImage, {
+    scale: 1.05,
+    duration: 4,
+    ease: 'none'
+  });
+
+  // 3. Fade out splash screen and reveal main website
+  tl.to(splashScreen, {
+    opacity: 0,
+    scale: 1.1,
+    duration: 0.8,
+    ease: 'easeInOut',
+    delay: 1.5, // Hold the full image for 1.5s
+    onComplete: () => {
+      splashScreen.remove();
+      document.body.style.overflow = ''; // Restore scrolling
+    }
+  });
+
+  // Steam particle generator
+  function startSteamEffect() {
+    let interval = setInterval(() => {
+      if (!document.getElementById('splashScreen')) {
+        clearInterval(interval);
+        return;
+      }
+      const particle = document.createElement('div');
+      particle.className = 'steam-particle';
+      
+      const size = Math.random() * 50 + 50;
+      particle.style.width = size + 'px';
+      particle.style.height = size + 'px';
+      particle.style.left = (Math.random() * 60 + 20) + '%';
+      
+      steamContainer.appendChild(particle);
+
+      gsap.fromTo(particle, 
+        { y: 0, scale: 1, opacity: 0 },
+        {
+          y: -200 - Math.random() * 100,
+          scale: 3 + Math.random() * 2,
+          opacity: 0,
+          duration: 2 + Math.random() * 2,
+          ease: 'power1.out',
+          onStart: () => gsap.to(particle, { opacity: 0.8, duration: 0.5, yoyo: true, repeat: 1 }),
+          onComplete: () => {
+            if (particle.parentNode === steamContainer) {
+              particle.remove();
+            }
+          }
+        }
+      );
+    }, 100);
+  }
+});
